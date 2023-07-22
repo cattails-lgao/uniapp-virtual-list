@@ -1,0 +1,356 @@
+:root {
+	// 基础颜色
+	// --color-parimay: #56bb97;
+	--color-primary: #56bb97;
+	--color-auxiliary: #437aff;
+	--color-success: #4cd964;
+	--color-warning: #f0ad4e;
+	--color-error: #dd524d;
+
+	// 字体颜色
+	--text-color: #333; //基本色
+	--text-color-white: #fff; //反色
+	--text-color-grey: #999; //辅助灰色，如加载更多的提示信息
+	--text-color-placeholder: #808080;
+	--text-color-disable: #c0c0c0;
+	--text-color-ccc: #ccc;
+	--text-color-666: #666;
+	--text-color-999: #999;
+	--text-color-f1: #f1f1f1;
+	--text-color-adadad: #adadad;
+
+	// 背景颜色
+	--bg-color-default: #f4f4f6;
+	--bg-color-white: #ffffff;
+	--bg-color-grey: #f8f8f8;
+	--bg-color-hover: #f1f1f1; //点击状态颜色
+	--bg-color-mask: rgba(0, 0, 0, 0.4); //遮罩颜色
+
+	// 边框颜色
+	--border-color: #ececec;
+}
+
+$uni-root-size: 2;
+
+// 字体
+$sizes: (
+	$uni-root-size * 32,
+	$uni-root-size * 28,
+	$uni-root-size * 24,
+	$uni-root-size * 23,
+	$uni-root-size * 22,
+	$uni-root-size * 21,
+	$uni-root-size * 20,
+	$uni-root-size * 18,
+	$uni-root-size * 16,
+	$uni-root-size * 14,
+	$uni-root-size * 13,
+	$uni-root-size * 12,
+	$uni-root-size * 11,
+	$uni-root-size * 10,
+	$uni-root-size * 9,
+	$uni-root-size * 8
+);
+// 间距
+$spaces: (
+	$uni-root-size * 0,
+	$uni-root-size * 4,
+	$uni-root-size * 3,
+	$uni-root-size * 5,
+	$uni-root-size * 6,
+	$uni-root-size * 7,
+	$uni-root-size * 8,
+	$uni-root-size * 9,
+	$uni-root-size * 10,
+	$uni-root-size * 11,
+	$uni-root-size * 12,
+	$uni-root-size * 13,
+	$uni-root-size * 14,
+	$uni-root-size * 15,
+	$uni-root-size * 16,
+	$uni-root-size * 17,
+	$uni-root-size * 18,
+	$uni-root-size * 19,
+	$uni-root-size * 20,
+	$uni-root-size * 21,
+	$uni-root-size * 22,
+	$uni-root-size * 23,
+	$uni-root-size * 24,
+	$uni-root-size * 25,
+	$uni-root-size * 26,
+	$uni-root-size * 27,
+	$uni-root-size * 28,
+	$uni-root-size * 30,
+	$uni-root-size * 32,
+	$uni-root-size * 35,
+	$uni-root-size * 60,
+	$uni-root-size * 50
+);
+// 圆角
+$fillets: (
+	s: $uni-border-radius-s,
+	sm: $uni-border-radius-sm,
+	base: $uni-border-radius-base,
+	circle: $uni-border-radius-circle
+);
+// 字体颜色
+$colors: (
+	primary: var(--color-primary),
+	auxiliary: var(--color-auxiliary),
+	success: var(--color-success),
+	warning: var(--color-warning),
+	error: var(--color-error),
+	base: var(--text-color),
+	white: var(--text-color-white),
+	ccc: var(--text-color-ccc),
+	666: var(--text-color-666),
+	999: var(--text-color-999),
+	placeholder: var(--text-color-placeholder),
+	disable: var(--text-color-disable),
+	f1: var(--text-color-f1),
+	adadad: var(--text-color-adadad),
+	eb6100: #eb6100,
+	1b5656: #1b5656,
+	0c3960: #0c3960,
+	415261: #415261,
+	57210a: #57210a,
+	be936c: #be936c,
+	4a4a4a: #4a4a4a
+);
+// 背景色
+$backgrounds: (
+	primary: var(--color-primary),
+	success: var(--color-success),
+	warning: var(--color-warning),
+	error: var(--color-error),
+	white: var(--bg-color-white),
+	grey: var(--bg-color-grey),
+	hover: var(--bg-color-hover),
+	mask: var(--bg-color-mask),
+	E4E4E4: #e4e4e4,
+	33e781: #33e781,
+	eb6100: #eb6100
+);
+// 字体大小
+@each $size in $sizes {
+	.font-#{$size}r {
+		font-size: $size + rpx;
+	}
+}
+.position {
+	&-r {
+		position: relative;
+	}
+	&-a {
+		position: absolute;
+	}
+	&-f {
+		position: fixed;
+	}
+	&-t {
+		position: sticky;
+	}
+}
+// 字体样式
+.font {
+	&-b {
+		font-weight: bold;
+		&-n {
+			font-weight: normal;
+		}
+	}
+	&-a {
+		&-c {
+			text-align: center;
+		}
+		&-l {
+			text-align: left;
+		}
+		&-r {
+			text-align: right;
+		}
+	}
+	&-overflow {
+		text-overflow: ellipsis;
+		overflow: hidden; /* #ifndef APP-NVUE */
+		white-space: nowrap; /* #endif */ /* #ifdef APP-NVUE */
+		lines: 1; /* #endif */
+	}
+	&-line-clamp {
+		overflow: hidden;
+		text-overflow: ellipsis; /* #ifndef APP-NVUE */
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical; /* #endif */ /* #ifdef APP-NVUE */
+		lines: 2; /* #endif */
+		word-break: break-all;
+	}
+}
+// 间距
+@each $space in $spaces {
+	.mx-#{$space}r {
+		margin-left: $space + rpx;
+		margin-right: $space + rpx;
+	}
+	.my-#{$space}r {
+		margin-top: $space + rpx;
+		margin-bottom: $space + rpx;
+	}
+	.mt-#{$space}r {
+		margin-top: $space + rpx;
+	}
+	.mb-#{$space}r {
+		margin-bottom: $space + rpx;
+	}
+	.ml-#{$space}r {
+		margin-left: $space + rpx;
+	}
+	.mr-#{$space}r {
+		margin-right: $space + rpx;
+	}
+	.px-#{$space}r {
+		padding-left: $space + rpx;
+		padding-right: $space + rpx;
+	}
+	.py-#{$space}r {
+		padding-top: $space + rpx;
+		padding-bottom: $space + rpx;
+	}
+	.pt-#{$space}r {
+		padding-top: $space + rpx;
+	}
+	.pb-#{$space}r {
+		padding-bottom: $space + rpx;
+	}
+	.pl-#{$space}r {
+		padding-left: $space + rpx;
+	}
+	.pr-#{$space}r {
+		padding-right: $space + rpx;
+	}
+}
+// 颜色
+@each $key, $color in $colors {
+	.color-#{'' + $key} {
+		color: $color;
+	}
+}
+// 背景色
+@each $key, $color in $backgrounds {
+	.bg-color-#{'' + $key} {
+		background-color: $color;
+	}
+}
+// 边框
+.border {
+	@each $key, $fillet in $fillets {
+		&-radius {
+			&-#{$key} {
+				border-radius: $fillet;
+			}
+			&-t-#{$key} {
+				border-top-left-radius: $fillet;
+				border-top-right-radius: $fillet;
+			}
+			&-tl-#{$key} {
+				border-top-left-radius: $fillet;
+			}
+			&-tr-#{$key} {
+				border-top-right-radius: $fillet;
+			}
+			&-b-#{$key} {
+				border-bottom-left-radius: $fillet;
+				border-bottom-right-radius: $fillet;
+			}
+			&-bl-#{$key} {
+				border-bottom-left-radius: $fillet;
+			}
+			&-br-#{$key} {
+				border-bottom-right-radius: $fillet;
+			}
+		}
+	}
+	&-n {
+		/* #ifndef APP-NVUE */
+		border: none; /* #endif */
+		/* #ifdef APP-NVUE */
+		border-width: 0; /* #endif */
+	}
+	&-t {
+		border-top: 1rpx solid var(--border-color);
+	}
+	&-b {
+		border-bottom: 1rpx solid var(--border-color);
+	}
+}
+// flex
+.flex {
+	display: flex;
+	&-w {
+		flex-wrap: wrap;
+		&-n {
+			flex-wrap: nowrap;
+		}
+	}
+	&-s {
+		/* #ifndef APP-NVUE */
+		flex-shrink: 0; /* #endif */
+	}
+	&-d {
+		flex-direction: row;
+		&-c {
+			flex-direction: column;
+		}
+		&-r {
+			flex-direction: row-reverse;
+		}
+	}
+	&-j {
+		/* #ifndef APP-NVUE */
+		justify-content: stretch;
+		/* #endif */
+		&-s {
+			justify-content: flex-start;
+		}
+		&-e {
+			justify-content: flex-end;
+		}
+		&-c {
+			justify-content: center;
+		}
+		&-b {
+			justify-content: space-between;
+		}
+		&-a {
+			justify-content: space-around;
+		}
+		&-ev {
+			justify-content: space-evenly;
+		}
+	}
+	&-a {
+		align-items: stretch;
+		&-s {
+			align-items: flex-start;
+		}
+		&-e {
+			align-items: flex-end;
+		}
+		&-c {
+			align-items: center;
+		}
+	}
+	@for $i from 1 to 12 {
+		&-#{$i} {
+			flex: $i;
+		}
+	}
+}
+.line-height {
+	&-1 {
+		line-height: 1;
+	}
+	&-n {
+		line-height: normal;
+	}
+}

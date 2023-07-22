@@ -27,10 +27,10 @@ export default class Virtual {
 
 	// 整个滚动区域的高度
 	scrollHeight = 0;
-	// 可视窗口高度
-	windowHeight = 0;
 	// 记录当前滚动偏移量
 	scrollTop = 0;
+	// 滚动方向
+	direction = 0;
 	// 通知外部range变化的函数
 	onRangeUpdate = null;
 	// 列表数据
@@ -47,9 +47,16 @@ export default class Virtual {
 		windowHeight = 0
 	} = {}, onRangeUpdate) {
 		this.uniqueIds = uniqueIds;
-		this.windowHeight = windowHeight;
 		this.onRangeUpdate = onRangeUpdate;
 		if (this.onRangeUpdate) this.onRangeUpdate(this.range);
+	}
+	
+	isBehind () {
+	  return this.direction === DirectionType.Down
+	}
+	
+	isFront () {
+	  return this.direction === DirectionType.Up
 	}
 
 	/**
@@ -57,8 +64,22 @@ export default class Virtual {
 	 */
 	updateDateList(uniqueIds) {
 		this.uniqueIds = uniqueIds;
-		this.range.end = this.uniqueIds.length;
-		this.onRangeUpdate(this.range);
+		
+		this.handleDataSourcesChange();
+	}
+	
+	handleDataSourcesChange () {
+	  let start = this.range.start
+	
+	  if (this.isFront()) {
+	    start = start - Math.floor(Virtual.viewCount / 3);
+	  } else if (this.isBehind()) {
+	    start = start + Math.floor(Virtual.viewCount / 3);
+	  }
+	
+	  start = Math.max(start, 0)
+	
+	  this.updateRange(this.range.start, this.getEndByStart(start))
 	}
 
 	// 存储每个item的高度
@@ -76,16 +97,27 @@ export default class Virtual {
 	 * 主要函数监听滚动
 	 * @param {Object} e
 	 */
-	onScroll(e) {
+	onScroll(data) {
 		// 获取偏移量
-		let offset = Math.floor(e.detail.scrollTop);
+		let offset = Math.floor(data.scrollTop);
 		// 获取整个滚动区域的高度
-		this.scrollHeight = e.detail.scrollHeight;
+		this.scrollHeight = data.scrollHeight;
+		this.direction = this.getDirection(offset);
 
-		if (this.getDirection(offset) === DirectionType.Up) {
-			this.handleUp();
-		} else {
+		if (this.direction === DirectionType.Up) {
+			// #ifdef APP-NVUE
 			this.handleDown();
+			// #endif
+			// #ifndef APP-NVUE
+			this.handleUp();
+			// #endif
+		} else {
+			// #ifndef APP-NVUE
+			this.handleDown();
+			// #endif
+			// #ifdef APP-NVUE
+			this.handleUp();
+			// #endif
 		}
 
 		this.scrollTop = offset;
@@ -96,11 +128,16 @@ export default class Virtual {
 	 */
 	handleUp() {
 		const overs = this.getOverIndex();
-		// if (overs > this.range.start) {
-		// 	return;
-		// }
-		// const start = Math.max(overs - Math.floor(Virtual.viewCount / 3), 0)
+		// #ifdef APP-NVUE
+		if (overs > this.range.start) {
+			return;
+		}
+		const start = Math.max(overs - Math.floor(Virtual.viewCount / 3), 0)
+		this.checkRange(start, this.getEndByStart(start))
+		// #endif
+		// #ifndef APP-NVUE
 		this.checkRange(overs, this.getEndByStart(overs))
+		// #endif
 	}
 
 	/**
@@ -108,40 +145,46 @@ export default class Virtual {
 	 */
 	handleDown() {
 		const overs = this.getOverIndex();
-		// if (overs < this.range.start + Math.floor(Virtual.viewCount / 3)) {
-		// 	return;
-		// }
-		
+		// #ifdef APP-NVUE
+		if (overs < this.range.start + Math.floor(Virtual.viewCount / 3)) {
+			return;
+		}
+		// #endif
 		this.checkRange(overs, this.getEndByStart(overs))
 	}
 
 	checkRange(start, end) {
-		// const total = this.uniqueIds.length;
+		// #ifdef APP-NVUE
+		const total = this.uniqueIds.length;
 
-		// if (total <= Virtual.viewCount) {
-		// 	start = 0;
-		// 	end = this.getLastIndex();
-		// } else if (end - start < Virtual.viewCount - 1) {
-		// 	start = end - Virtual.viewCount + 1;
-		// }
+		if (total <= Virtual.viewCount) {
+			start = 0;
+			end = this.getLastIndex();
+		} else if (end - start < Virtual.viewCount - 1) {
+			start = end - Virtual.viewCount + 1;
+		}
 		
-		// if (this.range.start !== start) {
-		// 	this.updateRange(start, end);
-		// }
+		if (this.range.start !== start) {
+			this.updateRange(start, end);
+		}
+		// #endif
 		
+		// #ifndef APP-NVUE
 		let startIndex = 0;
 		
 		if (start <= Virtual.viewCount) {
 			startIndex = 0;
 		} else {
-			startIndex = start -  Virtual.viewCount;
+			startIndex = start -  Math.floor(Virtual.viewCount / 3);
 		}
-		let endIndex = start +  Virtual.viewCount * 2;
+		
+		let endIndex = start +  Math.floor(Virtual.viewCount / 3) * 2;
 		if(!this.uniqueIds[endIndex]) {
 			endIndex = this.uniqueIds.length;
 		}
 		
-		this.updateRange(start, end);
+		this.updateRange(startIndex, endIndex);
+		// #endif
 	}
 
 	updateRange(start, end) {

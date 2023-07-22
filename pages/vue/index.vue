@@ -1,0 +1,86 @@
+<template>
+	<virtual-list :dataList="dataList" :loadMoreState="loadMoreState" @refresh="onRefresh" @toLower="onToLower">
+		<template v-slot:default="{ data }">
+			<site-comp class="mb-30r" :data="data" />
+		</template>
+	</virtual-list>
+</template>
+
+<script setup>
+import { ref } from 'vue';
+import { onLoad } from '@dcloudio/uni-app';
+import VirtualList from '@/components/VirtualList/index.vue';
+import SiteComp from './site-comp.vue';
+const LOAD_STATUS_MORE = 'more';
+const LOAD_STATUS_LOADING = 'loading';
+const LOAD_STATUS_NOMORE = 'noMore';
+const loadMoreState = ref(LOAD_STATUS_MORE);
+
+function createData(wait = 0) {
+	loadMoreState.value = LOAD_STATUS_LOADING;
+	return new Promise((resolve, reject) => {
+		setTimeout(() => {
+			resolve(
+				Array.from(new Array(20), (_, index) => ({
+					id: uRandom(),
+					statusName: randomlyGeneratedChineseCharacters(2),
+					startTime: '2023-09-01',
+					endTime: '2023-09-11',
+					name: randomlyGeneratedChineseCharacters(8),
+					address: randomlyGeneratedChineseCharacters(15),
+					districtName: randomlyGeneratedChineseCharacters(4),
+					typeName: randomlyGeneratedChineseCharacters(4),
+					statistics: {
+						kuponos: Math.floor(30 + Math.random() * 100),
+						external: Math.floor(30 + Math.random() * 100),
+						internal: Math.floor(30 + Math.random() * 100),
+						invalid: Math.floor(30 + Math.random() * 100),
+						emission: Math.floor(30 + Math.random() * 100)
+					}
+				}))
+			);
+			loadMoreState.value = LOAD_STATUS_MORE;
+		}, wait);
+	});
+}
+
+function uRandom() {
+	//用于生成uuid
+	const S4 = () => (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
+	return S4() + S4() + '-' + S4() + '-' + S4() + '-' + S4() + '-' + S4() + S4() + S4();
+}
+
+function randomlyGeneratedChineseCharacters(num) {
+	let arr = [];
+	for (let i = 0; i < num; i++) {
+		let str;
+		//汉字对应的unicode编码为u4e00-u9fa5转为10进制为19968-40869，先取随机数，再转为16进制
+		str = '\\u' + (Math.floor(Math.random() * (40869 - 19968)) + 19968).toString(16);
+		//在用正则操作数据后进行解码。注意：unescape() 函数在 JavaScript 1.5 版中已弃用。请使用 decodeURI() 或 decodeURIComponent() 代替。
+		str = unescape(str.replace(/\\u/g, '%u'));
+		arr.push(str);
+	}
+	let chinese = arr.join('');
+	return chinese;
+}
+
+const dataList = ref([]);
+
+onLoad(async () => {
+	dataList.value = await createData();
+});
+
+async function onRefresh({ done }) {
+	const data = await createData(4000);
+	dataList.value = data;
+	
+	done();
+}
+
+async function onToLower() {
+	const data = await createData(1000);
+	dataList.value.push(...data);
+}
+</script>
+
+<style scoped lang="scss"></style>

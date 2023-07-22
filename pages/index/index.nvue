@@ -1,0 +1,16 @@
+<template>
+	<button @tap="toLink('/pages/vue/index')">
+		<navigator>vue</navigator>
+	</button>
+	<button @tap="toLink('/pages/nvue/index')">
+		<navigator>nvue</navigator>
+	</button>
+</template>
+
+<script setup>
+	function toLink(url) {
+		uni.navigateTo({
+			url
+		})
+	}
+</script>

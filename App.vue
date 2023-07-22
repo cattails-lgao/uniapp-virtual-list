@@ -12,6 +12,11 @@
 	}
 </script>
 
-<style>
+<style lang="scss">
 	/*每个页面公共css */
+	@import 'static/index.scss';
+	
+	page {
+		background-color: #f7fafa;
+	}
 </style>
