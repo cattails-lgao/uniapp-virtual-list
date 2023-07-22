@@ -1,0 +1,13 @@
+{
+  "hash": "8f18ff59",
+  "browserHash": "e5e1d4b1",
+  "optimized": {
+    "vue-virtual-scroll-list": {
+      "src": "../../node_modules/.pnpm/registry.npmjs.org+vue-virtual-scroll-list@2.3.5/node_modules/vue-virtual-scroll-list/dist/index.js",
+      "file": "vue-virtual-scroll-list.js",
+      "fileHash": "abc2d384",
+      "needsInterop": true
+    }
+  },
+  "chunks": {}
+}
